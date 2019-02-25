@@ -1,56 +1,77 @@
-/**
- * 
- */
-package com.dineshvelhal.framework.weblib;
 
-import static org.junit.Assert.*;
+package com.dineshvelhal.framework.weblib;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
-import lombok.extern.log4j.Log4j2;
-
-/**
- * @author Dinesh_Velhal
- *
- */
 public class WebInstanceTest {
-
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
 	@Test
-	public void test() {
-		//fail("Not yet implemented");
-		assertTrue("Dummy Test", 1 == 1);
-	}
+	public void testChrome() {
+		By searchBox = By.id("searchInput");
+		By searchButton = By.id("searchButton");
 
+		WebInstance inst = 
+				WebInstance.builder()
+				.driverName("chrome")
+				.headless(false)
+				.implicitWaitSeconds(10)
+				.pageLoadTimeoutSeconds(30)
+				.chromeDriverPath("E:\\tmp\\chromedriver.exe")
+				.build()
+				.initialize();
+
+		WebRunner.builder()
+		.webinstance(inst)
+		.build()
+		.open("http://en.wikipedia.org")
+		.sendKeys(searchBox, "Google")
+		.click(searchButton)
+		.quitBrowser();
+	}
+	
+	@Test
+	public void testFirefox() {
+		By searchBox = By.id("searchInput");
+		By searchButton = By.id("searchButton");
+
+		WebInstance inst = 
+				WebInstance.builder()
+				.driverName("firefox")
+				.headless(false)
+				.implicitWaitSeconds(10)
+				.pageLoadTimeoutSeconds(30)
+				.firefoxDriverPath("E:\\tmp\\geckodriver.exe")
+				.build()
+				.initialize();
+
+		WebRunner.builder()
+		.webinstance(inst)
+		.build()
+		.open("http://en.wikipedia.org")
+		.sendKeys(searchBox, "Google")
+		.click(searchButton)
+		.quitBrowser();
+	}
+	
+	//
 }
