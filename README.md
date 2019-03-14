@@ -1,2 +1,2 @@
 # weblib
-Awesome Web Automation Library using Selenium
+An easy-to-use Selenium Library for use in Page Object Model based automation frameworks
