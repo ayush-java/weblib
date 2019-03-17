@@ -3,7 +3,11 @@
  */
 package com.dineshvelhal.framework.weblib;
 
+import java.io.File;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -69,7 +73,7 @@ public class WebRunner {
 	public WebRunner click(By by) {
 		log.traceEntry("locator: [{}]", by.toString());
 		
-		WebElement e = webinstance.getDriver().findElement(by);
+		WebElement e = webinstance.smartFindElement(by);
 		
 		e.click();
 		
@@ -87,7 +91,7 @@ public class WebRunner {
 	public WebRunner sendKeys(By by, String text) {
 		log.traceEntry("locator: [{}] text: [{}]", by.toString(), text);
 		
-		WebElement e = webinstance.getDriver().findElement(by);
+		WebElement e = webinstance.smartFindElement(by);
 		
 		e.sendKeys(text);
 		
@@ -106,7 +110,7 @@ public class WebRunner {
 	public WebRunner selectByVisibleText(By by, String text) {
 		log.traceEntry("locator: [{}] text: [{}]", by.toString(), text);
 		
-		WebElement e = webinstance.getDriver().findElement(by);
+		WebElement e = webinstance.smartFindElement(by);
 		
 		(new Select(e)).selectByVisibleText(text);
 		
@@ -124,7 +128,7 @@ public class WebRunner {
 	public WebRunner selectByIndex(By by, int index) {
 		log.traceEntry("locator: [{}] index: [{}]", by.toString(), index);
 		
-		WebElement e = webinstance.getDriver().findElement(by);
+		WebElement e = webinstance.smartFindElement(by);
 		
 		(new Select(e)).selectByIndex(index);
 		
@@ -142,7 +146,7 @@ public class WebRunner {
 	public WebRunner selectByValue(By by, String value) {
 		log.traceEntry("locator: [{}] value: [{}]", by.toString(), value);
 		
-		WebElement e = webinstance.getDriver().findElement(by);
+		WebElement e = webinstance.smartFindElement(by);
 		
 		(new Select(e)).selectByValue(value);
 		
@@ -153,9 +157,28 @@ public class WebRunner {
 	// TODO double click
 	// TODO right click
 	// TODO special key-strokes
-	// TODO screenshots
+	
 	// TODO get inner text
 	// TODO get specific attribute value
+	// TODO wait for element visible
+	// TODO wait for element invisible
+	// TODO wait for element clickable
+	
+	
+	
+	/**
+	 * Takes screenshot and returns the screenshot File object
+	 * @return screenshot File
+	 */
+	public File getScreenshot() {
+		log.traceEntry();
+		
+		File scr = ((TakesScreenshot)getWebinstance().getDriver()).getScreenshotAs(OutputType.FILE);
+		
+		log.traceExit("screenshot File: {}", scr.getAbsolutePath());
+		return scr;
+		
+	}
 	
 	
 	/**
