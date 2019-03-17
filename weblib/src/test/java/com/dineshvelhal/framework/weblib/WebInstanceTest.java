@@ -11,6 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+/**
+ * @author Dinesh_Velhal (dinesh.velhal at gmail.com)
+ *
+ */
+
 public class WebInstanceTest {
 	/*@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
