@@ -17,7 +17,7 @@ import org.openqa.selenium.By;
  */
 
 public class WebInstanceTest {
-	/*@BeforeClass
+	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
 
@@ -82,7 +82,7 @@ public class WebInstanceTest {
 		
 		File f = wr.getScreenshot();
 		wr.quitBrowser();
-	}*/
+	}
 }
 
 
