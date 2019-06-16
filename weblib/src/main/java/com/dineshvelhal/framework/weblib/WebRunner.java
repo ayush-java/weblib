@@ -5,7 +5,9 @@
 package com.dineshvelhal.framework.weblib;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -16,6 +18,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -34,13 +37,25 @@ public class WebRunner {
 	@NonNull
 	private WebInstance webInstance;
 
+	@Getter(AccessLevel.PUBLIC)
 	private WebDriver driver;
 
 	/**
 	 * Explicit Wait time in seconds (will be used by smartFind method)
 	 */
-	@Getter(AccessLevel.PUBLIC)
 	private int smartWaitSeconds = 15;
+
+	/**
+	 * ImplicitlyWait time in seconds
+	 */
+	private int implicitWaitSeconds = 15;
+
+
+	/**
+	 * Page Load Timeout in seconds
+	 */
+	private int pageLoadTimeoutSeconds = 60;
+
 
 	//************************************************************************************************
 	// CONSTRUCTORS
@@ -73,10 +88,14 @@ public class WebRunner {
 	public WebRunner open(String url) {
 		log.traceEntry("url: [{}]", url);
 
+		driver.manage().timeouts().implicitlyWait(getImplicitWaitSeconds(), TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(getPageLoadTimeoutSeconds(), TimeUnit.SECONDS);
+
 		log.info("driver hashcode: [{}]", webInstance.getDriver().hashCode());
 		webInstance.getDriver().get(url);
 
-		log.info("Test running with webInstance: [{}]", webInstance);
+		//log.info("Test running with webInstance: [{}]", webInstance);
+		log.info("Test running with webRunner: [{}]", this);
 
 		log.traceExit();
 		return this;
@@ -111,7 +130,8 @@ public class WebRunner {
 		log.traceEntry("locator: [{}] text: [{}]", by.toString(), text);
 
 		WebElement e = smartFindElement(by);
-
+		
+		e.clear();
 		e.sendKeys(text);
 
 		log.traceExit();
@@ -176,6 +196,10 @@ public class WebRunner {
 	// TODO double click
 	// TODO right click
 	// TODO special key-strokes
+	// TODO scrollPageDown
+	// TODO scrollPageUp
+	// TODO ScrollToBottomOfPage
+	// TODO ScrollToTopOfPage
 
 	// TODO get inner text
 	// TODO get specific attribute value
@@ -184,7 +208,15 @@ public class WebRunner {
 	// TODO wait for element clickable
 	// TODO wait for page load
 
-
+	public String getText(By by) {
+		log.traceEntry();
+		
+		WebElement e = this.smartFindElement(by);
+		String retVal = e.getText();
+		
+		log.traceExit();
+		return retVal;
+	}
 
 	/**
 	 * Takes screenshot and returns the screenshot File object
@@ -225,20 +257,100 @@ public class WebRunner {
 
 		webInstance.getDriver().quit();
 		log.info("Browser quit successfully [{}]", webInstance);
-		
+
 		log.traceExit();
 		return this;
 	}
 
 	/**
 	 * @param smartWaitSeconds number of seconds to wait used by smartFind
+	 * @return this instance
 	 */
-	public void setSmartWaitSeconds(int smartWaitSeconds) {
+	public WebRunner setSmartWaitSeconds(int smartWaitSeconds) {
 		log.traceEntry("smartWaitSeconds: [{}]", smartWaitSeconds);
 
 		this.smartWaitSeconds = smartWaitSeconds;
 
 		log.traceExit();
+		return this;
+	}
+
+	/**
+	 * @param implicitWaitSeconds the implicitWaitSeconds to set
+	 * @return this instance
+	 */
+	public WebRunner setImplicitWaitSeconds(int implicitWaitSeconds) {
+		log.traceEntry("implicitWaitSeconds: [{}]", implicitWaitSeconds);
+
+		this.implicitWaitSeconds = implicitWaitSeconds;
+		driver.manage().timeouts().implicitlyWait(implicitWaitSeconds, TimeUnit.SECONDS);
+
+		log.traceExit();
+		return this;
+	}
+
+
+	/**
+	 * @param pageLoadTimeoutSeconds the pageLoadTimeoutSeconds to set
+	 */
+	public WebRunner setPageLoadTimeoutSeconds(int pageLoadTimeoutSeconds) {
+		log.traceEntry("pageLoadTimeoutSeconds: [{}]", pageLoadTimeoutSeconds);
+
+		this.pageLoadTimeoutSeconds = pageLoadTimeoutSeconds;
+		driver.manage().timeouts().pageLoadTimeout(pageLoadTimeoutSeconds, TimeUnit.SECONDS);
+
+		log.traceExit();
+		return this;
+	}
+
+
+	/**
+	 * @return the WebDriverWait using smartWaitSeconds
+	 */
+	public WebDriverWait getWait() {
+		log.traceEntry();
+		
+		log.info("Wait configured with seconds: [{}]", smartWaitSeconds);
+		
+		log.traceExit();
+		
+		return new WebDriverWait(getDriver(), smartWaitSeconds);
+	}
+
+
+	public Alert waitForAlertVisible() {
+		log.traceEntry();
+
+		Alert alert = getWait().until(ExpectedConditions.alertIsPresent());
+
+		log.traceExit();
+		return alert;
+	}
+
+	public WebRunner acceptAlert() {
+		log.traceEntry();
+		
+		Alert alert = waitForAlertVisible();
+		log.info("Aert Message: [{}]", alert.getText());
+		
+		alert.accept();
+		log.info("Alert accepted");
+		
+		log.traceExit();
+		return this;
+	}
+	
+	public WebRunner dismissAlert() {
+		log.traceEntry();
+		
+		Alert alert = waitForAlertVisible();
+		log.info("Aert Message: [{}]", alert.getText());
+		
+		alert.dismiss();
+		log.info("Alert dismissed");
+
+		log.traceExit();
+		return this;
 	}
 
 
@@ -274,6 +386,37 @@ public class WebRunner {
 	}
 
 
+	/**
+	 * @return the smartWaitSeconds
+	 */
+	public int getSmartWaitSeconds() {
+		log.traceEntry();
+
+		log.traceExit();
+		return smartWaitSeconds;
+	}
+
+	/**
+	 * @return the pageLoadTimeoutSeconds
+	 */
+	public int getPageLoadTimeoutSeconds() {
+		log.traceEntry();
+
+		log.traceExit();
+		return pageLoadTimeoutSeconds;
+	}
+
+	/**
+	 * @return the implicitWaitSeconds
+	 */
+	public int getImplicitWaitSeconds() {
+		log.traceEntry();
+
+		log.traceExit();
+		return implicitWaitSeconds;
+	}
+
+
 	//************************************************************************************************
 	// ALL SUPPORT METHODS
 	//************************************************************************************************
@@ -290,8 +433,8 @@ public class WebRunner {
 
 		WebElement e;
 		try {
-			log.info("Using implicit wait: {} seconds", this.webInstance.implicitWaitSeconds);
-			
+			log.info("Using implicit wait: {} seconds", this.implicitWaitSeconds);
+
 			e = driver.findElement(by);
 			log.info("Found the element [{}]", by.toString());
 		} catch (Exception e1) {
@@ -318,7 +461,7 @@ public class WebRunner {
 
 		WebElement e;
 
-		log.info("Using smart wait: {} seconds", seconds);
+		log.info("Using non-default smart wait: {} seconds", seconds);
 
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, seconds);
@@ -343,15 +486,20 @@ public class WebRunner {
 	 */
 	public WebElement smartFindElement(By by) {
 		log.traceEntry("by = {}", by);
+		
+		WebElement e;
+		
+		//int seconds = getSmartWaitSeconds();
+		//log.info("Using default wait: {} seconds", seconds);
 
-		int seconds = getSmartWaitSeconds();
-		log.info("Using default wait: {} seconds", seconds);
-
-		WebElement e = smartFindElement(by, seconds);
+		WebDriverWait wait = this.getWait();
+		e = wait.until(ExpectedConditions.elementToBeClickable(by));
+		log.info("Found the element [{}]", by);
 
 		log.traceExit();
 		return e;
 	}
-	
+
+
 	// TODO fluent findElement needed
 }

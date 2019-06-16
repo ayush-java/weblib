@@ -49,20 +49,7 @@ public class WebInstance {
 	final Browser driverName = Browser.CHROME;
 
 
-	/**
-	 * ImplicitlyWait time in seconds
-	 */
-	@Getter(AccessLevel.PUBLIC)
-	@Builder.Default 
-	final int implicitWaitSeconds = 15;
 
-
-	/**
-	 * Page Load Timeout in seconds
-	 */
-	@Getter(AccessLevel.PUBLIC)
-	@Builder.Default 
-	final int pageLoadTimeoutSeconds = 60;
 
 
 	/**
@@ -221,7 +208,7 @@ public class WebInstance {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("Error in instatiating the browser {}", e.getMessage());
+			log.error("Error in instantiating the browser {}", e.getMessage());
 			throw e;
 		}
 
@@ -230,8 +217,7 @@ public class WebInstance {
 			getDriver().manage().window().maximize();
 		}
 		
-		driver.manage().timeouts().implicitlyWait(getImplicitWaitSeconds(), TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(getPageLoadTimeoutSeconds(), TimeUnit.SECONDS);
+
 		
 		log.info("Browser Instance: [{}]", this);
 

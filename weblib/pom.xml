@@ -33,6 +33,9 @@
     <checkstyle.config.version>1.0.X-SNAPSHOT</checkstyle.config.version>
 
     <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+    <testng.version>6.14.3</testng.version>
+    <selenium.version>3.141.59</selenium.version>
+    <projectlombok.version>1.18.6</projectlombok.version>
   </properties>
 
   <dependencies>
@@ -47,7 +50,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.6</version>
+      <version>${projectlombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -62,8 +65,17 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.141.59</version>
+      <version>${selenium.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
