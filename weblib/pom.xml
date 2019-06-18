@@ -9,7 +9,7 @@
   <packaging>jar</packaging>
 
   <name>weblib</name>
-  <url>https://github.com/dineshvelhal/weblib.git</url>
+  <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +22,8 @@
     <java.debug>true</java.debug>
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 
+    <maven-surefire-report-plugin.version>3.0.0-M3</maven-surefire-report-plugin.version>
+
     <jacoco.version>0.8.3</jacoco.version>
     <jacoco.bundle.coveredratio.minimum>0.10</jacoco.bundle.coveredratio.minimum>
 
@@ -31,26 +33,14 @@
     <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
     <checkstyle.version>6.19</checkstyle.version>
     <checkstyle.config.version>1.0.X-SNAPSHOT</checkstyle.config.version>
-
-    <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
-    <testng.version>6.14.3</testng.version>
-    <selenium.version>3.141.59</selenium.version>
-    <projectlombok.version>1.18.6</projectlombok.version>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-
     <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>${projectlombok.version}</version>
+      <version>1.18.6</version>
       <scope>provided</scope>
     </dependency>
 
@@ -65,14 +55,14 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>${selenium.version}</version>
+      <version>3.141.59</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.testng/testng -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>${testng.version}</version>
+      <version>6.14.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -81,14 +71,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
-          <version>${maven-checkstyle-plugin.version}</version> <dependencies> <dependency> 
-          <groupId>com.efenglu.maven</groupId> <artifactId>checkstyle-config</artifactId> 
-          <version>${checkstyle.config.version}</version> </dependency> <dependency> 
-          <groupId>com.puppycrawl.tools</groupId> <artifactId>checkstyle</artifactId> 
-          <version>${checkstyle.version}</version> </dependency> </dependencies> <configuration> 
-          <configLocation>checkstyle.xml</configLocation> <encoding>${project.build.sourceEncoding}</encoding> 
-          </configuration> </plugin> -->
       </plugins>
     </pluginManagement>
 
@@ -107,6 +89,7 @@
           <showWarnings>${java.showWarnings}</showWarnings>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -160,6 +143,17 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-report-plugin.version}</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <executions>
           <execution>
@@ -177,7 +171,6 @@
         <artifactId>maven-site-plugin</artifactId>
         <version>3.7.1</version>
       </plugin>
-
     </plugins>
   </build>
 
@@ -186,8 +179,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
+        <version>${maven-surefire-report-plugin.version}</version>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -200,6 +194,7 @@
           </reportSet>
         </reportSets>
       </plugin>
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

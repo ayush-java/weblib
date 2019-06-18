@@ -1,16 +1,18 @@
 package com.dineshvelhal.framework.weblib;
 
 import org.testng.annotations.Test;
+import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterTest;
 
 public class Trial {
@@ -18,7 +20,7 @@ public class Trial {
 	
 	String expCondUrl = (new File(getClass()
 			.getClassLoader()
-			.getResource("expected_conditions.html")
+			.getResource("keyboard_events.html")
 			.getFile()))
 			.getAbsolutePath();
 	
@@ -26,13 +28,16 @@ public class Trial {
 	public void f() throws InterruptedException {
 		driver.get(expCondUrl);
 		
-		driver.findElement(By.id("alert_trigger")).click();
+		WebElement area = driver.findElement(By.id("area"));
 		
-		WebDriverWait wait = new WebDriverWait(driver, 10);
+		area.sendKeys("Dinesh");
 		
-		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-		System.out.println("alert = " + alert.getText());
-		alert.accept();
+		//area.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		List<CharSequence> chars = new ArrayList<CharSequence>();
+		chars.add(Keys.CONTROL);
+		chars.add("a");
+		
+		area.sendKeys(Keys.chord(chars));
 	}
 	
 	

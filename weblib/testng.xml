@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="3" name="UnitTestSuite" parallel="classes">
+  <test thread-count="3" name="UnitTest" parallel="classes">
+    <classes>
+      <class name="com.dineshvelhal.framework.weblib.KeyboardTest"/>
+      <class name="com.dineshvelhal.framework.weblib.LocatorTest"/>
+    </classes>
+  </test> <!-- UnitTest -->
+</suite> <!-- UnitTestSuite -->

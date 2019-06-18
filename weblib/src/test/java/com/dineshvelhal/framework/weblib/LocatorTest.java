@@ -1,10 +1,9 @@
 package com.dineshvelhal.framework.weblib;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
-
-import lombok.extern.log4j.Log4j2;
-
 import org.testng.annotations.BeforeClass;
+import lombok.extern.log4j.Log4j2;
 
 import static org.testng.Assert.assertEquals;
 
@@ -12,10 +11,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import org.openqa.selenium.By;
-import org.testng.annotations.AfterClass;
 
 @Log4j2
-public class LocatorTests {
+public class LocatorTest {
 
 	static WebInstance inst;
 	static WebRunner runner;
@@ -52,9 +50,10 @@ public class LocatorTests {
 	@Test
 	public void handleAlertTest() {
 		runner.getDriver().navigate().refresh();
-		setMinMaxWait("3", "15");
+		setMinMaxWait("3", "5");
 
 		assertEquals(runner
+				.setSmartWaitSeconds(5)
 				.click(By.id("alert_trigger"))
 				.acceptAlert()
 				.getText(By.xpath("//*[@id=\"alert_handled\"]/span"))
@@ -65,9 +64,10 @@ public class LocatorTests {
 	@Test
 	public void dismissAlertTest() {
 		runner.getDriver().navigate().refresh();
-		setMinMaxWait("3", "15");
+		setMinMaxWait("3", "5");
 
 		assertEquals(runner
+				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.dismissAlert()
 				.getText(By.xpath("//*[@id=\"confirm_cancelled\"]/span"))
@@ -78,9 +78,10 @@ public class LocatorTests {
 	@Test
 	public void acceptAlertTest() {
 		runner.getDriver().navigate().refresh();
-		setMinMaxWait("3", "15");
+		setMinMaxWait("3", "5");
 
 		assertEquals(runner
+				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.acceptAlert()
 				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span"))
@@ -91,10 +92,10 @@ public class LocatorTests {
 	@Test
 	public void smartWaitTest() {
 		runner.getDriver().navigate().refresh();
-		setMinMaxWait("16", "16");
+		setMinMaxWait("5", "5");
 
 		assertEquals(runner
-				.setSmartWaitSeconds(16)
+				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.acceptAlert()
 				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span"))

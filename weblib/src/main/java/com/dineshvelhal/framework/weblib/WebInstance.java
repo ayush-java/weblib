@@ -2,7 +2,11 @@ package com.dineshvelhal.framework.weblib;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -14,14 +18,12 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
+
 
 
 /**
+ * Represents the instance of a WebDriver and provides easy builder methods to instantiate.
+ * 
  * @author Dinesh_Velhal
  *
  */
@@ -47,9 +49,6 @@ public class WebInstance {
 	@Getter(AccessLevel.PUBLIC)
 	@Builder.Default 
 	final Browser driverName = Browser.CHROME;
-
-
-
 
 
 	/**

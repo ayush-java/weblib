@@ -5,10 +5,13 @@
 package com.dineshvelhal.framework.weblib;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +21,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -120,7 +122,7 @@ public class WebRunner {
 	}
 
 	/**
-	 * Type in the web element based on the locator passed as argument
+	 * Type in the web element based on the locator passed as argument (it clears the original contents of the web element)
 	 * 
 	 * @param by locator 
 	 * @param text text to be entered
@@ -129,10 +131,33 @@ public class WebRunner {
 	public WebRunner sendKeys(By by, String text) {
 		log.traceEntry("locator: [{}] text: [{}]", by.toString(), text);
 
-		WebElement e = smartFindElement(by);
-		
+		WebElement e = smartFindElement(by); 
+
 		e.clear();
-		e.sendKeys(text);
+		e.sendKeys(text); 
+
+		log.traceExit();
+		return this;
+	}
+	
+	
+	/**
+	 * @param by locator
+	 * @param chars a sequence of any number of characters (usually Keys.<somekey>, ....)
+	 * @return this instance
+	 */
+	public WebRunner sendKeys(By by, CharSequence... chars) {
+		log.traceEntry("locator: [{}] chars: [{}]", by.toString(), chars);
+
+		WebElement e = smartFindElement(by); 
+
+		List<CharSequence> lstChars = new ArrayList<CharSequence>();
+		
+		for(CharSequence c: chars) {
+			lstChars.add(c);
+		}
+		
+		e.sendKeys(Keys.chord(lstChars)); 
 
 		log.traceExit();
 		return this;
@@ -201,22 +226,41 @@ public class WebRunner {
 	// TODO ScrollToBottomOfPage
 	// TODO ScrollToTopOfPage
 
-	// TODO get inner text
-	// TODO get specific attribute value
 	// TODO wait for element visible
 	// TODO wait for element invisible
 	// TODO wait for element clickable
 	// TODO wait for page load
 
+	/**
+	 * @param by locator
+	 * @return Text contained in the element
+	 */
 	public String getText(By by) {
 		log.traceEntry();
-		
+
 		WebElement e = this.smartFindElement(by);
 		String retVal = e.getText();
-		
+
 		log.traceExit();
 		return retVal;
 	}
+	
+	
+	/**
+	 * @param by located
+	 * @param attrName Name of the attribute
+	 * @return attribute value
+	 */
+	public String getAttributeValue(By by, String attrName) {
+		log.traceEntry();
+
+		WebElement e = this.smartFindElement(by);
+		String retVal = e.getAttribute(attrName);
+
+		log.traceExit();
+		return retVal;
+	}
+	
 
 	/**
 	 * Takes screenshot and returns the screenshot File object
@@ -309,11 +353,11 @@ public class WebRunner {
 	 */
 	public WebDriverWait getWait() {
 		log.traceEntry();
-		
+
 		log.info("Wait configured with seconds: [{}]", smartWaitSeconds);
-		
+
 		log.traceExit();
-		
+
 		return new WebDriverWait(getDriver(), smartWaitSeconds);
 	}
 
@@ -329,23 +373,23 @@ public class WebRunner {
 
 	public WebRunner acceptAlert() {
 		log.traceEntry();
-		
+
 		Alert alert = waitForAlertVisible();
 		log.info("Aert Message: [{}]", alert.getText());
-		
+
 		alert.accept();
 		log.info("Alert accepted");
-		
+
 		log.traceExit();
 		return this;
 	}
-	
+
 	public WebRunner dismissAlert() {
 		log.traceEntry();
-		
+
 		Alert alert = waitForAlertVisible();
 		log.info("Aert Message: [{}]", alert.getText());
-		
+
 		alert.dismiss();
 		log.info("Alert dismissed");
 
@@ -447,8 +491,8 @@ public class WebRunner {
 	}
 
 	/**
-	 * Returns the WebElement by finding it using smartFind
-	 * Using the explicit wait specified as argument
+	 * Finds the element by waiting for given number of seconds for the 
+	 * element to be clickable
 	 * 
 	 * @param by locator
 	 * @param seconds Wait in seconds
@@ -467,9 +511,9 @@ public class WebRunner {
 			WebDriverWait wait = new WebDriverWait(driver, seconds);
 			e = wait.until(ExpectedConditions.elementToBeClickable(by));
 			log.info("Found the element [{}]", by);
-		} catch (Exception e1) {
-			log.error("Error in finding element [{}] - ERROR [{}]", by.toString(), e1.getMessage());
-			throw e1;
+		} catch (Exception ex) {
+			log.error("Error in finding element [{}] - ERROR [{}]", by.toString(), ex.getMessage());
+			throw ex;
 		}
 
 		log.traceExit();
@@ -478,23 +522,29 @@ public class WebRunner {
 
 
 	/**
-	 * Returns the WebElement by finding it using smartFind or normal findElement.
-	 * Using the explicit wait specified in the field getExplicitWait
+	 * Finds the element by waiting for smartwaitSeconds for the 
+	 * element to be clickable
 	 * 
 	 * @param by locator
 	 * @return WebElement
 	 */
 	public WebElement smartFindElement(By by) {
 		log.traceEntry("by = {}", by);
-		
+
 		WebElement e;
-		
+
 		//int seconds = getSmartWaitSeconds();
 		//log.info("Using default wait: {} seconds", seconds);
 
-		WebDriverWait wait = this.getWait();
-		e = wait.until(ExpectedConditions.elementToBeClickable(by));
-		log.info("Found the element [{}]", by);
+		try {
+			WebDriverWait wait = this.getWait();
+			e = wait.until(ExpectedConditions.elementToBeClickable(by));
+			log.info("Found the element [{}]", by);
+		}
+		catch (Exception ex) {
+			log.error("Error in finding element [{}] - ERROR [{}]", by.toString(), ex.getMessage());
+			throw ex;
+		}
 
 		log.traceExit();
 		return e;
