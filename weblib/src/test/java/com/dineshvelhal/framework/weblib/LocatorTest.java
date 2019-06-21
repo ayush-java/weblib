@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import lombok.extern.log4j.Log4j2;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -56,9 +57,9 @@ public class LocatorTest {
 				.setSmartWaitSeconds(5)
 				.click(By.id("alert_trigger"))
 				.acceptAlert()
-				.getText(By.xpath("//*[@id=\"alert_handled\"]/span"))
-				, "Alert handled"
-				, "Assert failed for handleAlertTest.");
+				.getText(By.xpath("//*[@id=\"alert_handled\"]/span")),
+				"Alert handled",
+				"Assert failed for handleAlertTest.");
 	}
 
 	@Test
@@ -70,9 +71,9 @@ public class LocatorTest {
 				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.dismissAlert()
-				.getText(By.xpath("//*[@id=\"confirm_cancelled\"]/span"))
-				, "Cancelled"
-				, "Assert failed for dismissAlertTest.");
+				.getText(By.xpath("//*[@id=\"confirm_cancelled\"]/span")),
+				"Cancelled",
+				"Assert failed for dismissAlertTest.");
 	}
 
 	@Test
@@ -84,9 +85,9 @@ public class LocatorTest {
 				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.acceptAlert()
-				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span"))
-				, "OK"
-				, "Assert failed for acceptAlertTest.");
+				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span")),
+				"OK",
+				"Assert failed for acceptAlertTest.");
 	}
 
 	@Test
@@ -98,10 +99,97 @@ public class LocatorTest {
 				.setSmartWaitSeconds(5)
 				.click(By.id("prompt_trigger"))
 				.acceptAlert()
-				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span"))
-				, "OK"
-				, "Assert failed for acceptAlertTest.");
+				.getText(By.xpath("//*[@id=\"confirm_ok\"]/span")),
+				"OK",
+				"Assert failed for acceptAlertTest.");
 	}
+
+
+	@Test
+	public void waitForValueChange() {
+		runner.getDriver().navigate().refresh();
+		setMinMaxWait("5", "5");
+
+		assertTrue(runner
+				.setSmartWaitSeconds(5)
+				.click(By.id("text_value_trigger"))
+				.waitForElementValueToContain(By.id("wait_for_value"), "Dennis Ritchie") == true);
+	}
+	
+	@Test
+	public void waitForTextChange() {
+		runner.getDriver().navigate().refresh();
+		setMinMaxWait("5", "5");
+
+		assertTrue(runner
+				.setSmartWaitSeconds(5)
+				.click(By.id("text_value_trigger"))
+				.waitForElementTextToContain(By.id("wait_for_text"), "Submit") == true);
+	}
+	
+	@Test
+	public void switchToFrameByLocator() {
+		runner.getDriver().navigate().refresh();
+		setMinMaxWait("3", "5");
+
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.click(By.id("wait_for_frame"))
+				.switchToFrame(By.id("frame"))
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+		
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.switchToDefaultContent()
+				.click(By.id("wait_for_frame"))
+				.switchToFrame(By.id("frame"))
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+	}
+	
+	@Test
+	public void switchToFrameByName() {
+		runner.getDriver().navigate().refresh();
+		setMinMaxWait("3", "5");
+
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.click(By.id("wait_for_frame"))
+				.switchToFrame("frm")
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+		
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.switchToDefaultContent()
+				.click(By.id("wait_for_frame"))
+				.switchToFrame("frm")
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+	}
+	
+	@Test
+	public void switchToFrameByNum() {
+		runner.getDriver().navigate().refresh();
+		setMinMaxWait("3", "5");
+
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.click(By.id("wait_for_frame"))
+				.switchToFrame(0)
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+		
+		assertEquals(runner
+				.setSmartWaitSeconds(5)
+				.switchToDefaultContent()
+				.click(By.id("wait_for_frame"))
+				.switchToFrame(0)
+				.smartFindElement(By.id("inner_button"))
+				.getText(), "Inner Button");
+	}
+
 
 	private void setMinMaxWait(String min, String max) {
 		runner

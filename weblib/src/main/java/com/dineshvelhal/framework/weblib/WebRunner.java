@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -215,6 +216,78 @@ public class WebRunner {
 		(new Select(e)).selectByValue(value);
 
 		log.traceExit();
+		return this;
+	}
+	
+	
+	/**
+	 * Using wait and expected conditions, switches to the frame
+	 * @param by locator
+	 * @return this instance
+	 */
+	public WebRunner switchToFrame(By by) {
+		log.info("by: [{}]", by);
+		
+		WebDriverWait wait = getWait();
+		
+		try {
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(by));
+		}catch (Exception e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
+		return this;
+	}
+	
+	/**
+	 * Using wait and expected conditions, switches to the frame
+	 * @param by locator
+	 * @return this instance
+	 */
+	public WebRunner switchToFrame(String by) {
+		log.info("by: [{}]", by);
+		
+		WebDriverWait wait = getWait();
+		
+		try {
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(by));
+		}catch (Exception e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
+		return this;
+	}
+	
+	/**
+	 * Using wait and expected conditions, switches to the frame
+	 * @param by locator
+	 * @return this instance
+	 */
+	public WebRunner switchToFrame(int by) {
+		log.info("by: [{}]", by);
+		
+		WebDriverWait wait = getWait();
+		
+		try {
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(by));
+		}catch (Exception e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
+		return this;
+	}
+	
+	/**
+	 * Switch to the default content
+	 * @return this instance
+	 */
+	public WebRunner switchToDefaultContent() {
+		try {
+			this.getDriver().switchTo().defaultContent();
+		}catch (Exception e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
 		return this;
 	}
 
@@ -550,6 +623,33 @@ public class WebRunner {
 		return e;
 	}
 
+	public boolean waitForElementValueToContain(By by, String val) {
+		log.info("by: [{}] value: [{}]", by, val);
+		boolean retVal = false;
+		
+		WebDriverWait wait = this.getWait();
+		try {
+			retVal = wait.until(ExpectedConditions.textToBePresentInElementValue(by, val));
+		} catch (TimeoutException e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
+		return retVal;
+	}
+	
+	public boolean waitForElementTextToContain(By by, String val) {
+		log.info("by: [{}] value: [{}]", by, val);
+		boolean retVal = false;
+		
+		WebDriverWait wait = this.getWait();
+		try {
+			retVal = wait.until(ExpectedConditions.textToBePresentInElementLocated(by, val));
+		} catch (TimeoutException e) {
+			log.error("Error in wait [{}]", e.getMessage());
+			throw e;
+		}
+		return retVal;
+	}
 
 	// TODO fluent findElement needed
 }
