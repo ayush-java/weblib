@@ -20,7 +20,7 @@ public class Trial {
 	
 	String expCondUrl = (new File(getClass()
 			.getClassLoader()
-			.getResource("keyboard_events.html")
+			.getResource("testapp/keyboard_events.html")
 			.getFile()))
 			.getAbsolutePath();
 	

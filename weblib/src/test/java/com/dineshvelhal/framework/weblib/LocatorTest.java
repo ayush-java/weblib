@@ -21,7 +21,7 @@ public class LocatorTest {
 
 	String expCondUrl = (new File(getClass()
 			.getClassLoader()
-			.getResource("expected_conditions.html")
+			.getResource("testapp/expected_conditions.html")
 			.getFile()))
 			.getAbsolutePath();
 

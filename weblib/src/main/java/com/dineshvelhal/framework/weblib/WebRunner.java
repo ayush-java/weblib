@@ -143,6 +143,8 @@ public class WebRunner {
 	
 	
 	/**
+	 * Type in the web element based on the locator passed as argument (it clears the original contents of the web element)
+	 * 
 	 * @param by locator
 	 * @param chars a sequence of any number of characters (usually Keys.<somekey>, ....)
 	 * @return this instance
@@ -158,6 +160,7 @@ public class WebRunner {
 			lstChars.add(c);
 		}
 		
+		e.clear();
 		e.sendKeys(Keys.chord(lstChars)); 
 
 		log.traceExit();

@@ -21,7 +21,7 @@ public class KeyboardTest {
 
 	String expCondUrl = (new File(getClass()
 			.getClassLoader()
-			.getResource("keyboard_events.html")
+			.getResource("testapp/keyboard_mouse_events.html")
 			.getFile()))
 			.getAbsolutePath();
 

@@ -53,4 +53,13 @@ public class PageBase {
 		log.traceExit();
 		return runner.getWindowHandle();
 	}
+	
+	public PageBase refresh() {
+		log.traceEntry();
+
+		runner.getDriver().navigate().refresh();
+
+		log.traceExit();
+		return this;
+	}
 }
